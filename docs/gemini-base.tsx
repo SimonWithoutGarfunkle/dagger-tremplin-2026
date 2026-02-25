@@ -161,7 +161,7 @@ export default function App() {
             window.removeEventListener("keydown", handleKeyDown);
             document.removeEventListener("fullscreenchange", handleFullscreenChange);
         };
-    }, [currentSlide]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [currentSlide]);
 
     // Effet machine à écrire pour le titre
     useEffect(() => {
@@ -169,7 +169,7 @@ export default function App() {
         const text = slides[currentSlide].title;
         setTypedText("");
         const timer = setInterval(() => {
-            setTypedText(text.substring(0, i + 1));
+            setTypedText((prev) => text.substring(0, i + 1));
             i++;
             if (i >= text.length) clearInterval(timer);
         }, 50);
@@ -235,10 +235,10 @@ export default function App() {
 
                 {/* Footer */}
                 <div className="mt-8 pt-4 border-t border-green-500/30 flex justify-between items-center text-sm md:text-base uppercase tracking-widest text-green-700">
-                    <span className="flex items-center gap-2">
-                        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                        {slides[currentSlide].footer}
-                    </span>
+          <span className="flex items-center gap-2">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+              {slides[currentSlide].footer}
+          </span>
                     <div className="flex gap-3">
                         <button
                             onClick={prevSlide}
@@ -273,18 +273,18 @@ export default function App() {
             </div>
 
             <style>{`
-                @keyframes scan {
-                    from { transform: translateY(-100%); }
-                    to { transform: translateY(600%); }
-                }
-                .animate-scan {
-                    animation: scan 6s linear infinite;
-                }
-                :fullscreen .max-w-5xl {
-                    max-width: 90vw;
-                    min-height: 85vh;
-                }
-            `}</style>
+        @keyframes scan {
+          from { transform: translateY(-100%); }
+          to { transform: translateY(600%); }
+        }
+        .animate-scan {
+          animation: scan 6s linear infinite;
+        }
+        :fullscreen .max-w-5xl {
+          max-width: 90vw;
+          min-height: 85vh;
+        }
+      `}</style>
         </div>
     );
 }
