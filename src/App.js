@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Terminal, Box, Zap, Globe, Cpu, Maximize, Minimize } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Terminal, Box, Zap, ZapOff, Globe, Cpu, Maximize, Minimize } from 'lucide-react';
 
 // --- Composant de Pluie Matrix (Canvas) ---
-const MatrixRain = () => {
+const MatrixRain = ({ enabled }) => {
     const canvasRef = useRef(null);
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     useEffect(() => {
-        if (prefersReduced) return;
+        if (!enabled || !canvasRef.current) return;
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         let width = (canvas.width = window.innerWidth);
@@ -43,9 +42,9 @@ const MatrixRain = () => {
             clearInterval(interval);
             window.removeEventListener('resize', handleResize);
         };
-    }, []);
+    }, [enabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    if (prefersReduced) return null;
+    if (!enabled) return null;
     return <canvas ref={canvasRef} className="fixed inset-0 z-0 opacity-40" />;
 };
 
@@ -161,11 +160,14 @@ const renderContent = (slide) => {
         case 'question':
             return (
                 <div className="flex-grow flex flex-col items-center justify-center gap-8 py-4">
-                    <div className="text-center border border-green-500/30 bg-green-500/5 rounded px-12 py-6 space-y-3 shadow-[0_0_30px_rgba(34,197,94,0.1)]">
-                        <p className="text-green-400 text-lg font-bold uppercase tracking-[0.4em] mb-4">// Ressources</p>
-                        <p className="text-green-300 text-xl tracking-wider">github.com/dagger/dagger</p>
-                        <p className="text-green-300 text-xl tracking-wider">docs.dagger.io</p>
-                        <p className="text-green-300 text-xl tracking-wider">daggerverse.dev</p>
+                    <div className="text-center border border-green-500/30 bg-green-500/5 rounded px-12 py-6 space-y-5 shadow-[0_0_30px_rgba(34,197,94,0.1)]">
+                        <p className="text-green-400 text-lg font-bold uppercase tracking-[0.4em] mb-4">// Support disponible</p>
+                        <p className="text-green-300 text-xl tracking-wider">
+                            Question <span className="text-white font-bold">simple</span> → demandez à <span className="text-green-400 font-bold">Simon</span>
+                        </p>
+                        <p className="text-green-300 text-xl tracking-wider">
+                            Question <span className="text-white font-bold">complexe</span> → demandez à <span className="text-green-400 font-bold">Maxime</span>
+                        </p>
                     </div>
                     <p className="text-green-500 text-sm tracking-widest uppercase">[ ← → ] naviguer · [ F ] plein écran</p>
                 </div>
@@ -209,8 +211,9 @@ const slides = [
         icon: <Box className="w-12 h-12 text-green-500" />,
         content: [
             "Ta pipeline tourne **pareil** sur Mac, Windows, Linux, serveur ou cloud",
+            "Un seul code de pipeline — zéro réécriture entre environnements",
             "Ce que **Docker** est à ton app, **Dagger** l'est à ta pipeline",
-            "Un seul code de pipeline — zéro réécriture entre environnements"
+            "Coïncidence ? ..."
         ],
         footer: "Build once, run anywhere."
     },
@@ -252,12 +255,12 @@ const slides = [
     {
         id: 5,
         type: 'default',
-        title: "Pourquoi Accenture ?",
+        title: "Pourquoi chez Accenture ?",
         subtitle: "Un contexte qui pousse à innover",
         icon: <Globe className="w-12 h-12 text-green-500" />,
         content: [
             "**Batect** : notre CI portable historique, non maintenu depuis 2022",
-            "**Suite WFM complexe** : mon app ne démarre pas sans 3 autres applis minimum",
+            "**Suite WFM complexe** : mon app ne démarre pas sans 4 autres applis minimum",
             "**Runners saturés** : 2h de file d'attente pour débugger une pipeline",
             "**Run local** : vraie plus-value quand les runners sont rares et les devs nombreux"
         ],
@@ -343,7 +346,8 @@ const slides = [
             "**V1 pas encore sortie** : stable mais des breaking changes entre versions (renommages d'API)",
             "**LLMs à cadrer** : Claude mélange les versions — efficace quand on le recadre sur les docs",
             "**Peu de ressources Java** : la communauté est surtout sur Go, les exemples Java sont rares",
-            "**Relativement récent** : peu de retours d'expérience en production à grande échelle"
+            "**Relativement récent** : peu de retours d'expérience en production à grande échelle",
+            "**Business model non définitif** : actuellement gratuit, mais ça peut changer — le même fondateur l'a déjà fait"
         ],
         footer: "Adopter en connaissance de cause."
     },
@@ -405,9 +409,24 @@ const slides = [
         footer: "Verdict de Simon."
     },
 
-    // 13 — Questions
+    // 13 — Pour aller + loin
     {
         id: 13,
+        type: 'default',
+        title: "Pour aller + loin",
+        subtitle: "Ressources & communauté",
+        icon: <Globe className="w-12 h-12 text-green-500" />,
+        content: [
+            "**github.com/dagger/dagger** — Le repo officiel, issues, roadmap",
+            "**docs.dagger.io** — Documentation complète et références SDK",
+            "**daggerverse.dev** — Explorer et partager des modules communautaires",
+        ],
+        footer: "La Matrice n'a plus de secrets pour vous."
+    },
+
+    // 14 — Questions
+    {
+        id: 14,
         type: 'question',
         title: "Des questions ?",
         subtitle: "Dagger · Java SDK · CI/CD Local",
@@ -426,6 +445,9 @@ export default function App() {
     const [typedText, setTypedText] = useState("");
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [slideScale, setSlideScale] = useState(1);
+    const [animationsEnabled, setAnimationsEnabled] = useState(
+        !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    );
     const containerRef = useRef(null);
 
     // Calcule le facteur d'échelle selon la taille de la fenêtre
@@ -503,18 +525,31 @@ export default function App() {
     return (
         <div
             ref={containerRef}
-            className="relative min-h-screen bg-black text-green-500 font-mono overflow-hidden flex flex-col items-center justify-center p-4 selection:bg-green-500 selection:text-black"
+            className={`relative min-h-screen bg-black text-green-500 font-mono overflow-hidden flex flex-col items-center justify-center p-4 selection:bg-green-500 selection:text-black${!animationsEnabled ? ' no-animations' : ''}`}
         >
-            <MatrixRain />
+            <MatrixRain enabled={animationsEnabled} />
 
-            {/* Bouton Plein Écran flottant */}
-            <button
-                onClick={toggleFullscreen}
-                className="fixed top-6 right-6 z-50 p-3 bg-black/60 border border-green-500/50 rounded-full hover:bg-green-500 hover:text-black transition-all shadow-[0_0_15px_rgba(34,197,94,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-                title="Plein écran (F)"
-            >
-                {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
-            </button>
+            {/* Boutons flottants */}
+            <div className="fixed top-6 right-6 z-50 flex gap-2">
+                <button
+                    onClick={() => setAnimationsEnabled(v => !v)}
+                    className={`p-3 border rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
+                        animationsEnabled
+                            ? 'bg-black/60 border-green-500/50 hover:bg-green-500 hover:text-black shadow-[0_0_15px_rgba(34,197,94,0.2)]'
+                            : 'bg-green-500 text-black border-green-500 shadow-[0_0_20px_rgba(34,197,94,0.6)]'
+                    }`}
+                    title={animationsEnabled ? 'Activer le mode anti-épilepsie' : 'Désactiver le mode anti-épilepsie'}
+                >
+                    <ZapOff size={20} />
+                </button>
+                <button
+                    onClick={toggleFullscreen}
+                    className="p-3 bg-black/60 border border-green-500/50 rounded-full hover:bg-green-500 hover:text-black transition-all shadow-[0_0_15px_rgba(34,197,94,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                    title="Plein écran (F)"
+                >
+                    {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
+                </button>
+            </div>
 
             {/* Slide Container */}
             <div
@@ -602,9 +637,10 @@ export default function App() {
                 .animate-scan {
                     animation: scan 6s linear infinite;
                 }
+                .no-animations .animate-scan,
+                .no-animations .animate-pulse { animation: none; }
                 @media (prefers-reduced-motion: reduce) {
-                    .animate-scan  { animation: none; }
-                    .animate-pulse { animation: none; }
+                    .animate-scan, .animate-pulse { animation: none; }
                 }
             `}</style>
         </div>
