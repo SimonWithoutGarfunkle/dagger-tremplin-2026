@@ -4,8 +4,10 @@ import { ChevronLeft, ChevronRight, Terminal, Box, Zap, Globe, Cpu, Maximize, Mi
 // --- Composant de Pluie Matrix (Canvas) ---
 const MatrixRain = () => {
     const canvasRef = useRef(null);
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     useEffect(() => {
+        if (prefersReduced) return;
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         let width = (canvas.width = window.innerWidth);
@@ -25,10 +27,7 @@ const MatrixRain = () => {
             for (let i = 0; i < drops.length; i++) {
                 const text = characters.charAt(Math.floor(Math.random() * characters.length));
                 ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                if (drops[i] * fontSize > height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
+                if (drops[i] * fontSize > height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             }
         };
@@ -46,83 +45,400 @@ const MatrixRain = () => {
         };
     }, []);
 
+    if (prefersReduced) return null;
     return <canvas ref={canvasRef} className="fixed inset-0 z-0 opacity-40" />;
+};
+
+// --- Rendu du texte avec **gras** ---
+const BoldText = ({ line }) =>
+    line.split('**').map((part, i) =>
+        i % 2 === 1
+            ? <span key={i} className="text-white font-bold border-b border-green-500/30">{part}</span>
+            : part
+    );
+
+// --- Rendu du contenu selon le type de slide ---
+const renderContent = (slide) => {
+    switch (slide.type) {
+
+        case 'home':
+            return (
+                <div className="flex-grow flex flex-col items-center justify-center gap-10 py-4">
+                    {/* Logo Dagger — remplacer par <img src="/dagger-logo.png" /> si disponible */}
+                    <div className="border-2 border-green-500/60 bg-green-500/5 px-14 py-7 text-center rounded shadow-[0_0_50px_rgba(34,197,94,0.25)]">
+                        <div className="text-7xl font-bold tracking-[0.3em] text-green-400 drop-shadow-[0_0_25px_rgba(34,197,94,0.9)] font-mono">
+                            ◈ DAGGER ◈
+                        </div>
+                        <div className="text-green-500 text-sm tracking-[0.5em] mt-3 uppercase">// CI/CD Engine</div>
+                    </div>
+                    <p className="text-3xl text-green-300 italic tracking-wide text-center">
+                        {slide.tagline}
+                    </p>
+                </div>
+            );
+
+        case 'image':
+            return (
+                <div className="flex-grow flex gap-8 py-4 items-center">
+                    <div className="flex-1 space-y-5">
+                        {slide.content.map((line, idx) => (
+                            <div key={idx} className="flex gap-4 items-start group">
+                                <span className="text-green-500 font-bold group-hover:text-green-400 transition-colors text-xl mt-1">[{idx + 1}]</span>
+                                <p className="text-2xl leading-relaxed text-green-200">
+                                    <BoldText line={line} />
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="flex-shrink-0 w-1/2">
+                        <img
+                            src={slide.image}
+                            alt={slide.imageCaption || ''}
+                            className="w-full rounded border-2 border-green-500/50 shadow-[0_0_30px_rgba(34,197,94,0.4)]"
+                            style={{ filter: 'grayscale(100%) sepia(100%) hue-rotate(90deg) brightness(0.65) saturate(3)' }}
+                        />
+                        {slide.imageCaption && (
+                            <p className="text-center text-green-400 text-sm mt-2 tracking-wider italic">{slide.imageCaption}</p>
+                        )}
+                    </div>
+                </div>
+            );
+
+        case 'table':
+            return (
+                <div className="flex-grow py-3 overflow-auto">
+                    <table className="w-full border-collapse">
+                        <thead>
+                            <tr>
+                                {slide.tableData.headers.map((h, i) => (
+                                    <th key={i} className="border border-green-500/40 bg-green-500/15 px-4 py-3 text-left text-green-300 uppercase tracking-wider font-bold text-sm">
+                                        {h}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {slide.tableData.rows.map((row, ri) => (
+                                <tr key={ri} className="hover:bg-green-500/5 transition-colors">
+                                    {row.map((cell, ci) => (
+                                        <td key={ci} className={`border border-green-500/20 px-4 py-3 text-lg ${ci === 0 ? 'text-green-300 font-bold' : 'text-green-200'}`}>
+                                            {cell}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            );
+
+        case 'opinion':
+            return (
+                <div className="flex-grow flex flex-col gap-5 py-4">
+                    <div className="flex gap-5">
+                        {slide.opinions.map((group, gi) => (
+                            <div key={gi} className="flex-1 border border-green-500/30 p-4 bg-green-500/5 rounded">
+                                <div className="text-sm font-bold text-green-300 mb-3 pb-2 border-b border-green-500/20 uppercase tracking-wider">
+                                    {group.label}
+                                </div>
+                                <ul className="space-y-2">
+                                    {group.items.map((item, ii) => (
+                                        <li key={ii} className="text-green-200 text-xl flex items-start gap-2">
+                                            <span className="text-green-500 font-bold mt-1">›</span>
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="border-l-4 border-green-500 pl-5 py-3 bg-green-500/5 rounded-r">
+                        <p className="text-2xl text-white italic font-medium">{slide.verdict}</p>
+                    </div>
+                </div>
+            );
+
+        case 'question':
+            return (
+                <div className="flex-grow flex flex-col items-center justify-center gap-8 py-4">
+                    <div className="text-center border border-green-500/30 bg-green-500/5 rounded px-12 py-6 space-y-3 shadow-[0_0_30px_rgba(34,197,94,0.1)]">
+                        <p className="text-green-400 text-lg font-bold uppercase tracking-[0.4em] mb-4">// Ressources</p>
+                        <p className="text-green-300 text-xl tracking-wider">github.com/dagger/dagger</p>
+                        <p className="text-green-300 text-xl tracking-wider">docs.dagger.io</p>
+                        <p className="text-green-300 text-xl tracking-wider">daggerverse.dev</p>
+                    </div>
+                    <p className="text-green-500 text-sm tracking-widest uppercase">[ ← → ] naviguer · [ F ] plein écran</p>
+                </div>
+            );
+
+        default: // 'default' — liste de bullet points
+            return (
+                <div className="flex-grow py-5 space-y-6">
+                    {slide.content.map((line, idx) => (
+                        <div key={idx} className="flex gap-6 items-start group">
+                            <span className="text-green-500 font-bold group-hover:text-green-400 transition-colors text-xl mt-1">[{idx + 1}]</span>
+                            <p className="text-2xl md:text-3xl leading-relaxed text-green-200">
+                                <BoldText line={line} />
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            );
+    }
 };
 
 // --- Contenu des Slides ---
 const slides = [
+    // 1 — Home
     {
         id: 1,
-        title: "Dagger : Entrez dans la Matrice",
-        subtitle: "Le CI/CD Programmable & Local-First",
+        type: 'home',
+        title: "DAGGER",
+        subtitle: "Entrez dans la Matrice",
+        tagline: "Le coup de couteau dans le YAML",
         icon: <Terminal className="w-12 h-12 text-green-500" />,
-        content: [
-            "Le CI/CD traditionnel est une prison de YAML.",
-            "Dagger brise les chaînes en transformant vos pipelines en code réel.",
-            "Bienvenue dans l'ère de l'automatisation intelligente."
-        ],
-        footer: "Architecture Zenith : Le moteur universel."
+        footer: "CI/CD Programmable & Local-First"
     },
+
+    // 2 — C'est quoi ?
     {
         id: 2,
-        title: "L'Enfer du YAML (The Matrix)",
-        subtitle: "Pourquoi le CI/CD actuel est cassé ?",
+        type: 'default',
+        title: "C'est quoi ?",
+        subtitle: "Un runtime universel pour vos pipelines",
         icon: <Box className="w-12 h-12 text-green-500" />,
         content: [
-            "**L'Effet Boîte Noire** : On 'pousse et on prie' (Push and Pray).",
-            "**Duplication massive** : Des milliers de lignes YAML illisibles.",
-            "**Isolation** : Impossible de tester ses pipelines sur son propre laptop.",
-            "**Lenteur** : Pas de gestion de cache intelligente entre le local et le cloud."
+            "Ta pipeline tourne **pareil** sur Mac, Windows, Linux, serveur ou cloud",
+            "Ce que **Docker** est à ton app, **Dagger** l'est à ta pipeline",
+            "Un seul code de pipeline — zéro réécriture entre environnements"
         ],
-        footer: "Libérez votre esprit du YAML propriétaire."
+        footer: "Build once, run anywhere."
     },
+
+    // 3 — C'est qui ?
     {
         id: 3,
-        title: "Dagger Engine & Programmabilité",
-        subtitle: "Utilisez vos langages, pas des scripts",
-        icon: <Zap className="w-12 h-12 text-green-500" />,
+        type: 'image',
+        title: "C'est qui ?",
+        subtitle: "Le créateur de Docker récidive",
+        icon: <Box className="w-12 h-12 text-green-500" />,
         content: [
-            "**Moteur Multi-Langages** : Go, Python, TypeScript, Java.",
-            "**GraphQL sous le capot** : Chaque action est une requête vers une API unifiée.",
-            "**Buildkit Optimized** : Dagger utilise la puissance de Docker/Buildkit pour paralléliser l'exécution.",
-            "**Type-Safe** : Votre pipeline est vérifié à la compilation, pas au runtime."
+            "**Solomon Hykes** : co-fondateur de Docker",
+            "Même philosophie : **isolation + portabilité**",
+            "Pas une coïncidence — c'est une vision"
         ],
-        footer: "Vos pipelines sont des applications comme les autres."
+        image: "/solomon hykes.jpg",
+        imageCaption: "Solomon Hykes · Dagger CEO",
+        footer: "L'ADN Docker, appliqué au CI/CD."
     },
+
+    // 4 — Pourquoi Dagger ?
     {
         id: 4,
-        title: "Dagger Modules (Zenith)",
-        subtitle: "Le Daggerverse : Réutilisabilité Totale",
-        icon: <Globe className="w-12 h-12 text-green-500" />,
+        type: 'default',
+        title: "Pourquoi Dagger ?",
+        subtitle: "Ce que le YAML ne peut pas faire",
+        icon: <Zap className="w-12 h-12 text-green-500" />,
         content: [
-            "**Modularité** : Encapsulez des outils complexes (AWS, Terraform, K8s) en fonctions.",
-            "**Interface Unifiée** : Appelez un module Go depuis un projet Python sans friction.",
-            "**Zenith** : La nouvelle architecture qui expose vos fonctions CLI comme une API.",
-            "**Partage** : Importez des modules directement depuis GitHub."
+            "**Push & Pray** : on pousse et on espère que ça passe en CI",
+            "**Debug impossible** : 2h de file d'attente pour voir un log d'erreur",
+            "**Duplication massive** : des milliers de lignes YAML illisibles",
+            "**Zéro portabilité** : chaque CI a ses propres règles propriétaires"
         ],
-        footer: "Un écosystème global de blocs de construction CI/CD."
+        footer: "Il existe une sortie de la Matrice YAML."
     },
+
+    // 5 — Pourquoi Accenture ?
     {
         id: 5,
-        title: "Local-First : La Réalité Déchirée",
-        subtitle: "Le même pipeline, partout, tout le temps",
+        type: 'default',
+        title: "Pourquoi Accenture ?",
+        subtitle: "Un contexte qui pousse à innover",
+        icon: <Globe className="w-12 h-12 text-green-500" />,
+        content: [
+            "**Batect** : notre CI portable historique, non maintenu depuis 2022",
+            "**Suite WFM complexe** : mon app ne démarre pas sans 3 autres applis minimum",
+            "**Runners saturés** : 2h de file d'attente pour débugger une pipeline",
+            "**Run local** : vraie plus-value quand les runners sont rares et les devs nombreux"
+        ],
+        footer: "Le bon outil, au bon moment."
+    },
+
+    // 6 — Niveau 1 : CLI
+    {
+        id: 6,
+        type: 'default',
+        title: "Niveau 1 : CLI",
+        subtitle: "Zéro friction pour commencer",
+        icon: <Terminal className="w-12 h-12 text-green-500" />,
+        content: [
+            "**dagger call** : appeler une fonction de pipeline directement depuis le terminal",
+            "**Sans configuration** : utilisable immédiatement sur n'importe quel projet",
+            "**Feedback local** : tester et débugger sans attendre un runner distant",
+            "**Compatible tous CI** : un seul entrypoint pour GitHub Actions, GitLab, Jenkins..."
+        ],
+        footer: "Votre terminal est votre nouveau CI runner."
+    },
+
+    // 7 — Niveau 2 : SDK Java
+    {
+        id: 7,
+        type: 'default',
+        title: "Niveau 2 : SDK Java",
+        subtitle: "Les superpouvoirs de notre écosystème",
         icon: <Cpu className="w-12 h-12 text-green-500" />,
         content: [
-            "**Zéro Dérive** : Ce qui tourne sur votre machine tournera sur GitHub Actions/GitLab.",
-            "**Debug Interactif** : Ouvrez un shell instantanément dans un pipeline qui échoue.",
-            "**Cache Distribué** : Partagez les couches de build entre tous les développeurs via Dagger Cloud.",
-            "**Portabilité** : Changez de provider de CI en 5 minutes sans réécrire une ligne."
+            "**Typage fort** : chaque objet Dagger est typé, fini les surprises à l'exécution",
+            "**Erreurs à la compilation** : l'IDE vous prévient avant même de lancer",
+            "**Autocompletion** : explorez l'API Dagger comme n'importe quelle lib Java",
+            "Tous les avantages de votre environnement de développement habituel"
         ],
-        footer: "Dagger : La pièce manquante du DevOps moderne."
+        footer: "Vos pipelines, comme des apps Java."
+    },
+
+    // 8 — Mise en oeuvre : Avant
+    {
+        id: 8,
+        type: 'default',
+        title: "Mise en oeuvre",
+        subtitle: "Avant Dagger — l'ancien monde",
+        icon: <Box className="w-12 h-12 text-green-500" />,
+        content: [
+            "**Scripts shell** : 400 lignes de bash non testables, non typées",
+            "**YAML dupliqué** : un fichier par environnement, une incohérence par semaine",
+            "**Debug** : git push → 20 min d'attente → lire les logs → recommencer",
+            "**Onboarding** : 2 jours pour qu'un nouveau dev lance sa première pipeline"
+        ],
+        footer: "L'ancien monde."
+    },
+
+    // 9 — Avant / Après (tableau)
+    {
+        id: 9,
+        type: 'table',
+        title: "Avant / Après",
+        subtitle: "Ce que Dagger change concrètement",
+        icon: <Zap className="w-12 h-12 text-green-500" />,
+        tableData: {
+            headers: ["Critère", "Avant Dagger", "Avec Dagger"],
+            rows: [
+                ["Lancement local",  "❌ Impossible",              "✅ dagger call en 30s"],
+                ["Debug pipeline",   "⏳ 2h de file runner",       "✅ Immédiat en local"],
+                ["Réutilisation",    "📋 Copy-paste YAML",         "✅ Fonctions typées & testables"],
+                ["Onboarding",       "📅 ~2 jours",                "✅ ~2 heures"],
+                ["Maintenance",      "⚠️ Fragile & implicite",     "✅ Compilé & versionné"],
+            ]
+        },
+        footer: "Les chiffres parlent d'eux-mêmes."
+    },
+
+    // 10 — Limites
+    {
+        id: 10,
+        type: 'default',
+        title: "Les Limites",
+        subtitle: "Ce qu'il faut savoir avant de se lancer",
+        icon: <Box className="w-12 h-12 text-green-500" />,
+        content: [
+            "**V1 pas encore sortie** : stable mais des breaking changes entre versions (renommages d'API)",
+            "**LLMs à cadrer** : Claude mélange les versions — efficace quand on le recadre sur les docs",
+            "**Peu de ressources Java** : la communauté est surtout sur Go, les exemples Java sont rares",
+            "**Relativement récent** : peu de retours d'expérience en production à grande échelle"
+        ],
+        footer: "Adopter en connaissance de cause."
+    },
+
+    // 11 — Avis de Maxime
+    {
+        id: 11,
+        type: 'opinion',
+        title: "Avis de Maxime",
+        subtitle: "Promesse tenue ?",
+        icon: <Zap className="w-12 h-12 text-green-500" />,
+        opinions: [
+            {
+                label: "✅ Ce qui m'a convaincu",
+                items: [
+                    "Le run local est un vrai game changer",
+                    "Le SDK Java rend les pipelines maintenables",
+                    "L'intégration dans la stack existante s'est bien passée"
+                ]
+            },
+            {
+                label: "⚠️ Points d'attention",
+                items: [
+                    "Mise à jour = risque de casse sur les APIs",
+                    "SDK Java moins documenté que Go",
+                    "Courbe d'apprentissage au démarrage"
+                ]
+            }
+        ],
+        verdict: "Promesse tenue — à condition de figer sa version et de bien documenter.",
+        footer: "Verdict de Maxime."
+    },
+
+    // 12 — Avis de Simon
+    {
+        id: 12,
+        type: 'opinion',
+        title: "Avis de Simon",
+        subtitle: "Promesse tenue ?",
+        icon: <Zap className="w-12 h-12 text-green-500" />,
+        opinions: [
+            {
+                label: "✅ Ce qui m'a convaincu",
+                items: [
+                    "Fin du Push & Pray, enfin !",
+                    "Le typage Java réduit les bugs de pipeline",
+                    "Vision produit solide, équipe core très active"
+                ]
+            },
+            {
+                label: "⚠️ Points d'attention",
+                items: [
+                    "Trouver de la doc Java demande du creusage",
+                    "V0 encore jeune — prévoir du budget pour les mises à jour"
+                ]
+            }
+        ],
+        verdict: "Oui — à adopter dès maintenant, les yeux ouverts sur la version.",
+        footer: "Verdict de Simon."
+    },
+
+    // 13 — Questions
+    {
+        id: 13,
+        type: 'question',
+        title: "Des questions ?",
+        subtitle: "Dagger · Java SDK · CI/CD Local",
+        icon: <Terminal className="w-12 h-12 text-green-500" />,
+        footer: "Merci pour votre attention."
     }
 ];
+
+// Dimensions de référence de la slide (base de calcul pour le scaling)
+const SLIDE_BASE_W = 1100;
+const SLIDE_BASE_H = 680;
 
 // --- Composant Principal ---
 export default function App() {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [typedText, setTypedText] = useState("");
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const [slideScale, setSlideScale] = useState(1);
     const containerRef = useRef(null);
+
+    // Calcule le facteur d'échelle selon la taille de la fenêtre
+    const computeScale = (fullscreen) => {
+        if (fullscreen) {
+            return Math.min(
+                (window.innerWidth  * 0.90) / SLIDE_BASE_W,
+                (window.innerHeight * 0.85) / SLIDE_BASE_H
+            );
+        }
+        // En mode normal : scale down uniquement si l'écran est plus petit que la slide
+        return Math.min(1, (window.innerWidth - 32) / SLIDE_BASE_W);
+    };
 
     const nextSlide = () => {
         if (currentSlide < slides.length - 1) setCurrentSlide(currentSlide + 1);
@@ -151,15 +467,23 @@ export default function App() {
         };
 
         const handleFullscreenChange = () => {
-            setIsFullscreen(!!document.fullscreenElement);
+            const isFs = !!document.fullscreenElement;
+            setIsFullscreen(isFs);
+            setSlideScale(computeScale(isFs));
+        };
+
+        const handleResize = () => {
+            setSlideScale(computeScale(!!document.fullscreenElement));
         };
 
         window.addEventListener("keydown", handleKeyDown);
         document.addEventListener("fullscreenchange", handleFullscreenChange);
+        window.addEventListener("resize", handleResize);
 
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
             document.removeEventListener("fullscreenchange", handleFullscreenChange);
+            window.removeEventListener("resize", handleResize);
         };
     }, [currentSlide]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -186,20 +510,27 @@ export default function App() {
             {/* Bouton Plein Écran flottant */}
             <button
                 onClick={toggleFullscreen}
-                className="fixed top-6 right-6 z-50 p-3 bg-black/60 border border-green-500/50 rounded-full hover:bg-green-500 hover:text-black transition-all shadow-[0_0_15px_rgba(34,197,94,0.2)]"
+                className="fixed top-6 right-6 z-50 p-3 bg-black/60 border border-green-500/50 rounded-full hover:bg-green-500 hover:text-black transition-all shadow-[0_0_15px_rgba(34,197,94,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                 title="Plein écran (F)"
             >
                 {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
             </button>
 
             {/* Slide Container */}
-            <div className={`relative z-10 w-full max-w-5xl bg-black/80 border-2 border-green-500/50 rounded-lg shadow-[0_0_30px_rgba(34,197,94,0.3)] p-8 backdrop-blur-sm overflow-hidden min-h-[550px] flex flex-col justify-between transition-all duration-500 ${isFullscreen ? 'scale-110' : ''}`}>
+            <div
+                style={{
+                    width: `${SLIDE_BASE_W}px`,
+                    transform: `scale(${slideScale})`,
+                    transformOrigin: 'center center',
+                }}
+                className="relative z-10 bg-black/80 border-2 border-green-500/50 rounded-lg shadow-[0_0_30px_rgba(34,197,94,0.3)] p-8 backdrop-blur-sm overflow-hidden min-h-[580px] flex flex-col justify-between transition-transform duration-300"
+            >
 
                 {/* Effet de scan */}
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-green-500/5 to-transparent opacity-20 h-2 w-full animate-scan" />
 
                 {/* Header */}
-                <div className="flex items-center gap-4 mb-8 border-b border-green-500/30 pb-4">
+                <div className="flex items-center gap-4 mb-6 border-b border-green-500/30 pb-4">
                     <div className="bg-green-500/10 p-3 rounded border border-green-500/50">
                         {slides[currentSlide].icon}
                     </div>
@@ -207,34 +538,25 @@ export default function App() {
                         <h1 className="text-3xl md:text-5xl font-bold tracking-tighter uppercase mb-1 drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]">
                             {typedText}<span className="animate-pulse">_</span>
                         </h1>
-                        <p className="text-green-400/80 text-lg md:text-xl italic">
-                            {slides[currentSlide].subtitle}
-                        </p>
+                        {slides[currentSlide].subtitle && (
+                            <p className="text-green-400/80 text-lg md:text-xl italic">
+                                {slides[currentSlide].subtitle}
+                            </p>
+                        )}
                     </div>
                     <div className="text-right flex flex-col items-end gap-1">
-                        <div className="text-xs text-green-700 font-bold uppercase tracking-widest">Access Node: 0.19</div>
+                        <div className="text-xs text-green-500 font-bold uppercase tracking-widest">Access Node: 0.19</div>
                         <div className="text-xl font-bold bg-green-500 text-black px-2 rounded">
                             {slides[currentSlide].id}
                         </div>
                     </div>
                 </div>
 
-                {/* Content */}
-                <div className="flex-grow py-6 space-y-8">
-                    {slides[currentSlide].content.map((line, idx) => (
-                        <div key={idx} className="flex gap-6 items-start group">
-                            <span className="text-green-700 font-bold group-hover:text-green-400 transition-colors text-xl mt-1">[{idx + 1}]</span>
-                            <p className="text-2xl md:text-3xl leading-relaxed text-green-200">
-                                {line.split('**').map((part, i) =>
-                                    i % 2 === 1 ? <span key={i} className="text-white font-bold border-b border-green-500/30">{part}</span> : part
-                                )}
-                            </p>
-                        </div>
-                    ))}
-                </div>
+                {/* Content — rendu dynamique selon le type de slide */}
+                {renderContent(slides[currentSlide])}
 
                 {/* Footer */}
-                <div className="mt-8 pt-4 border-t border-green-500/30 flex justify-between items-center text-sm md:text-base uppercase tracking-widest text-green-700">
+                <div className="mt-6 pt-4 border-t border-green-500/30 flex justify-between items-center text-sm md:text-base uppercase tracking-widest text-green-500">
                     <span className="flex items-center gap-2">
                         <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                         {slides[currentSlide].footer}
@@ -243,7 +565,7 @@ export default function App() {
                         <button
                             onClick={prevSlide}
                             disabled={currentSlide === 0}
-                            className={`flex items-center gap-2 px-4 py-2 rounded border border-green-500/50 transition-all ${currentSlide === 0 ? 'opacity-20 cursor-not-allowed' : 'hover:bg-green-500 hover:text-black hover:shadow-[0_0_15px_rgba(34,197,94,0.5)]'}`}
+                            className={`flex items-center gap-2 px-4 py-2 rounded border border-green-500/50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-1 focus-visible:ring-offset-black ${currentSlide === 0 ? 'opacity-20 cursor-not-allowed' : 'hover:bg-green-500 hover:text-black hover:shadow-[0_0_15px_rgba(34,197,94,0.5)]'}`}
                         >
                             <ChevronLeft size={20} /> PREV
                         </button>
@@ -280,9 +602,9 @@ export default function App() {
                 .animate-scan {
                     animation: scan 6s linear infinite;
                 }
-                :fullscreen .max-w-5xl {
-                    max-width: 90vw;
-                    min-height: 85vh;
+                @media (prefers-reduced-motion: reduce) {
+                    .animate-scan  { animation: none; }
+                    .animate-pulse { animation: none; }
                 }
             `}</style>
         </div>
