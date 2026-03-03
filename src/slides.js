@@ -13,25 +13,37 @@ const slides = [
         footer: "CI/CD Programmable & Local-First"
     },
 
-    // 2 — C'est quoi ?
+    // 2 — Blague : le mauvais Dagger
     {
         id: 2,
+        type: 'fullimage',
+        title: "C'est quoi ?",
+        subtitle: "Ah… ce Dagger-là ?",
+        icon: <Box className="w-12 h-12 text-green-500" />,
+        image: "/dagger google.png",
+        imageCaption: "Dagger — framework d'injection de dépendances Google/Square pour Android/Java",
+        footer: "... non. Pas celui-là."
+    },
+
+    // 3 — C'est quoi ?
+    {
+        id: 3,
         type: 'default',
         title: "C'est quoi ?",
         subtitle: "Un runtime universel pour vos pipelines",
         icon: <Box className="w-12 h-12 text-green-500" />,
         content: [
-            "Ta pipeline tourne **pareil** sur Mac, Windows, Linux, serveur ou cloud",
-            "Un seul code de pipeline — zéro réécriture entre environnements",
-            "Ce que **Docker** est à ton app, **Dagger** l'est à ta pipeline",
+            "Mars 2022",
+            "Outil CICD Open Source",
+            "**Dagger** est à ta pipeline, ce que **Docker** est à ton app !",
             "Coïncidence ? ..."
         ],
         footer: "Build once, run anywhere."
     },
 
-    // 3 — C'est qui ?
+    // 4 — C'est qui ?
     {
-        id: 3,
+        id: 4,
         type: 'image',
         title: "C'est qui ?",
         subtitle: "Le créateur de Docker récidive",
@@ -46,25 +58,40 @@ const slides = [
         footer: "L'ADN Docker, appliqué au CI/CD."
     },
 
-    // 4 — Pourquoi Dagger ?
+    // 5 — Pourquoi Dagger ?
     {
-        id: 4,
+        id: 5,
         type: 'default',
         title: "Pourquoi Dagger ?",
-        subtitle: "Ce que le YAML ne peut pas faire",
+        subtitle: "Cinq problèmes, une réponse",
         icon: <Zap className="w-12 h-12 text-green-500" />,
         content: [
-            "**Push & Pray** : on pousse et on espère que ça passe en CI",
-            "**Debug impossible** : 2h de file d'attente pour voir un log d'erreur",
-            "**Duplication massive** : des milliers de lignes YAML illisibles",
-            "**Zéro portabilité** : chaque CI a ses propres règles propriétaires"
+            "**CI en local** : fini la divergence entre ton poste et le serveur — tu exécutes la même pipeline partout",
+            "**Faible couplage** : la plateforme CI (GitHub, GitLab…) devient un simple déclencheur, pas un fournisseur propriétaire",
+            "**Du code, pas du YAML** : des pipelines maintenables, testables et versionnées comme du vrai code",
+            "**Containers partout** : chaque étape tourne dans un environnement isolé et identique — local ou CI"
         ],
         footer: "Il existe une sortie de la Matrice YAML."
     },
 
-    // 5 — Pourquoi Accenture ?
+    // 6 — Comment ça marche ?
     {
-        id: 5,
+        id: 6,
+        type: 'default',
+        title: "Comment ?",
+        subtitle: "Les rouages sous le capot",
+        icon: <Cpu className="w-12 h-12 text-green-500" />,
+        content: [
+            "**Dagger Engine** : un daemon local (lui-même containerisé) qui orchestre et exécute les étapes",
+            "**Chaque étape = un container** : isolation garantie, comportement identique local ou CI",
+            "**Cache automatique** : si les inputs n'ont pas changé, l'étape est réutilisée — zéro travail inutile"
+        ],
+        footer: "Docker comme runtime, ton langage comme syntaxe."
+    },
+
+    // 7 — Pourquoi Accenture ?
+    {
+        id: 7,
         type: 'default',
         title: "Pourquoi chez Accenture ?",
         subtitle: "Un contexte qui pousse à innover",
@@ -78,9 +105,9 @@ const slides = [
         footer: "Le bon outil, au bon moment."
     },
 
-    // 6 — Niveau 1 : CLI
+    // 8 — Niveau 1 : CLI
     {
-        id: 6,
+        id: 8,
         type: 'default',
         title: "Niveau 1 : CLI",
         subtitle: "Zéro friction pour commencer",
@@ -94,9 +121,9 @@ const slides = [
         footer: "Votre terminal est votre nouveau CI runner."
     },
 
-    // 7 — Niveau 2 : SDK Java
+    // 9 — Niveau 2 : SDK Java
     {
-        id: 7,
+        id: 9,
         type: 'default',
         title: "Niveau 2 : SDK Java",
         subtitle: "Les superpouvoirs de notre écosystème",
@@ -110,9 +137,9 @@ const slides = [
         footer: "Vos pipelines, comme des apps Java."
     },
 
-    // 8 — Mise en oeuvre : Avant
+    // 10 — Mise en oeuvre : Avant
     {
-        id: 8,
+        id: 10,
         type: 'default',
         title: "Mise en oeuvre",
         subtitle: "Avant Dagger — l'ancien monde",
@@ -126,9 +153,9 @@ const slides = [
         footer: "L'ancien monde."
     },
 
-    // 9 — Avant / Après (tableau)
+    // 11 — Avant / Après (tableau)
     {
-        id: 9,
+        id: 11,
         type: 'table',
         title: "Avant / Après",
         subtitle: "Ce que Dagger change concrètement",
@@ -146,9 +173,21 @@ const slides = [
         footer: "Les chiffres parlent d'eux-mêmes."
     },
 
-    // 10 — Limites
+    // 12 — Pas mal non ?
     {
-        id: 10,
+        id: 12,
+        type: 'fullimage',
+        title: "Pas mal non ?",
+        subtitle: "C'est presque français",
+        icon: <Box className="w-12 h-12 text-green-500" />,
+        image: "/orson-welles-welles.gif",
+        imageCaption: "Une entreprise américaine et un papa français",
+        footer: "... non. Pas celui-là."
+    },
+
+    // 13 — Limites
+    {
+        id: 13,
         type: 'default',
         title: "Les Limites",
         subtitle: "Ce qu'il faut savoir avant de se lancer",
@@ -163,9 +202,9 @@ const slides = [
         footer: "Adopter en connaissance de cause."
     },
 
-    // 11 — Avis de Maxime
+    // 14 — Avis de Maxime
     {
-        id: 11,
+        id: 14,
         type: 'opinion',
         title: "Avis de Maxime",
         subtitle: "Promesse tenue ?",
@@ -192,9 +231,9 @@ const slides = [
         footer: "Verdict de Maxime."
     },
 
-    // 12 — Avis de Simon
+    // 15 — Avis de Simon
     {
-        id: 12,
+        id: 15,
         type: 'opinion',
         title: "Avis de Simon",
         subtitle: "Promesse tenue ?",
@@ -220,9 +259,9 @@ const slides = [
         footer: "Verdict de Simon."
     },
 
-    // 13 — Pour aller + loin
+    // 16 — Pour aller + loin
     {
-        id: 13,
+        id: 16,
         type: 'default',
         title: "Pour aller + loin",
         subtitle: "Ressources & communauté",
@@ -235,9 +274,9 @@ const slides = [
         footer: "La Matrice n'a plus de secrets pour vous."
     },
 
-    // 14 — Questions
+    // 17 — Questions
     {
-        id: 14,
+        id: 17,
         type: 'question',
         title: "Des questions ?",
         subtitle: "Dagger · Java SDK · CI/CD Local",

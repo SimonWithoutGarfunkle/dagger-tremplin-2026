@@ -112,6 +112,20 @@ const renderContent = (slide) => {
                 </div>
             );
 
+        case 'fullimage':
+            return (
+                <div className="flex-grow flex flex-col items-center justify-center py-4">
+                    <img
+                        src={slide.image}
+                        alt={slide.imageCaption || ''}
+                        className="max-h-[420px] max-w-full object-contain rounded border-2 border-green-500/50 shadow-[0_0_30px_rgba(34,197,94,0.4)]"
+                    />
+                    {slide.imageCaption && (
+                        <p className="text-center text-green-400 text-sm mt-3 tracking-wider italic">{slide.imageCaption}</p>
+                    )}
+                </div>
+            );
+
         case 'question':
             return (
                 <div className="flex-grow flex flex-col items-center justify-center gap-8 py-4">
