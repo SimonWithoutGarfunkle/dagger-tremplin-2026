@@ -118,10 +118,10 @@ const renderContent = (slide) => {
                     <div className="text-center border border-green-500/30 bg-green-500/5 rounded px-12 py-6 space-y-5 shadow-[0_0_30px_rgba(34,197,94,0.1)]">
                         <p className="text-green-400 text-lg font-bold uppercase tracking-[0.4em] mb-4">{"// Support disponible"}</p>
                         <p className="text-green-300 text-xl tracking-wider">
-                            Question <span className="text-white font-bold">simple</span> → demandez à <span className="text-green-400 font-bold">Simon</span>
+                            Question <span className="text-white font-bold">simple</span> → demandez à <span className="text-green-400 font-bold">Maxime & Simon</span>
                         </p>
                         <p className="text-green-300 text-xl tracking-wider">
-                            Question <span className="text-white font-bold">complexe</span> → demandez à <span className="text-green-400 font-bold">Maxime</span>
+                            Question <span className="text-white font-bold">complexe</span> → demandez à <span className="text-green-400 font-bold">Claude</span>
                         </p>
                     </div>
                     <p className="text-green-500 text-sm tracking-widest uppercase">[ ← → ] naviguer · [ F ] plein écran</p>
