@@ -105,9 +105,21 @@ const slides = [
         footer: "Le bon outil, au bon moment."
     },
 
-    // 8 — Niveau 1 : CLI
+    // 8 — ATR waiting
     {
         id: 8,
+        type: 'fullimage',
+        title: "Le contexte",
+        subtitle: "La réalité du terrain",
+        icon: <Globe className="w-12 h-12 text-green-500" />,
+        image: "/screenshots/atr waiting.png",
+        imageCaption: "File d'attente ATR — 2h pour débugger une pipeline",
+        footer: "2h de file d'attente pour une correction d'une ligne."
+    },
+
+    // 9 — Niveau 1 : CLI
+    {
+        id: 9,
         type: 'default',
         title: "Niveau 1 : CLI",
         subtitle: "Zéro friction pour commencer",
@@ -121,9 +133,9 @@ const slides = [
         footer: "Votre terminal est votre nouveau CI runner."
     },
 
-    // 9 — Niveau 2 : SDK Java
+    // 10 — Niveau 2 : SDK Java
     {
-        id: 9,
+        id: 10,
         type: 'default',
         title: "Niveau 2 : SDK Java",
         subtitle: "Les superpouvoirs de notre écosystème",
@@ -137,9 +149,33 @@ const slides = [
         footer: "Vos pipelines, comme des apps Java."
     },
 
-    // 10 — Mise en oeuvre : Avant
+    // 11 — Unit tests Java
     {
-        id: 10,
+        id: 11,
+        type: 'fullimage',
+        title: "En pratique",
+        subtitle: "Tests unitaires de pipeline",
+        icon: <Cpu className="w-12 h-12 text-green-500" />,
+        image: "/screenshots/unit tests java.png",
+        imageCaption: "Tests unitaires d'une pipeline Dagger en Java",
+        footer: "Des pipelines testables comme du vrai code."
+    },
+
+    // 12 — Run Java
+    {
+        id: 12,
+        type: 'fullimage',
+        title: "En pratique",
+        subtitle: "Exécution locale",
+        icon: <Terminal className="w-12 h-12 text-green-500" />,
+        image: "/screenshots/run java.png",
+        imageCaption: "Exécution d'une pipeline Java en local avec Dagger",
+        footer: "Local, rapide, reproductible."
+    },
+
+    // 13 — Mise en oeuvre : Avant
+    {
+        id: 13,
         type: 'default',
         title: "Mise en oeuvre",
         subtitle: "Avant Dagger — l'ancien monde",
@@ -153,9 +189,9 @@ const slides = [
         footer: "L'ancien monde."
     },
 
-    // 11 — Avant / Après (tableau)
+    // 14 — Avant / Après (tableau)
     {
-        id: 11,
+        id: 14,
         type: 'table',
         title: "Avant / Après",
         subtitle: "Ce que Dagger change concrètement",
@@ -173,9 +209,9 @@ const slides = [
         footer: "Les chiffres parlent d'eux-mêmes."
     },
 
-    // 12 — Pas mal non ?
+    // 15 — Pas mal non ?
     {
-        id: 12,
+        id: 15,
         type: 'fullimage',
         title: "Pas mal non ?",
         subtitle: "C'est presque français",
@@ -185,9 +221,9 @@ const slides = [
         footer: "... non. Pas celui-là."
     },
 
-    // 13 — Limites
+    // 16 — Limites
     {
-        id: 13,
+        id: 16,
         type: 'default',
         title: "Les Limites",
         subtitle: "Ce qu'il faut savoir avant de se lancer",
@@ -202,9 +238,9 @@ const slides = [
         footer: "Adopter en connaissance de cause."
     },
 
-    // 14 — Avis de Maxime
+    // 17 — Avis de Maxime
     {
-        id: 14,
+        id: 17,
         type: 'opinion',
         title: "Avis de Maxime",
         subtitle: "Promesse tenue ?",
@@ -231,9 +267,9 @@ const slides = [
         footer: "Verdict de Maxime."
     },
 
-    // 15 — Avis de Simon
+    // 18 — Avis de Simon
     {
-        id: 15,
+        id: 18,
         type: 'opinion',
         title: "Avis de Simon",
         subtitle: "Promesse tenue ?",
@@ -259,9 +295,9 @@ const slides = [
         footer: "Verdict de Simon."
     },
 
-    // 16 — Pour aller + loin
+    // 19 — Pour aller + loin
     {
-        id: 16,
+        id: 19,
         type: 'default',
         title: "Pour aller + loin",
         subtitle: "Ressources & communauté",
@@ -274,9 +310,9 @@ const slides = [
         footer: "La Matrice n'a plus de secrets pour vous."
     },
 
-    // 17 — Questions
+    // 20 — Questions
     {
-        id: 17,
+        id: 20,
         type: 'question',
         title: "Des questions ?",
         subtitle: "Dagger · Java SDK · CI/CD Local",

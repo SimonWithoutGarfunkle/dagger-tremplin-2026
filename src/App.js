@@ -280,7 +280,7 @@ export default function App() {
                     transform: `scale(${slideScale})`,
                     transformOrigin: 'center center',
                 }}
-                className="relative z-10 bg-black/80 border-2 border-green-500/50 rounded-lg shadow-[0_0_30px_rgba(34,197,94,0.3)] p-8 backdrop-blur-sm overflow-hidden min-h-[580px] flex flex-col justify-between transition-transform duration-300"
+                className="relative z-10 bg-black/80 border-2 border-green-500/50 rounded-lg shadow-[0_0_30px_rgba(34,197,94,0.3)] px-8 pt-8 pb-2 backdrop-blur-sm overflow-hidden min-h-[580px] flex flex-col justify-between transition-transform duration-300"
             >
                 {/* Effet de scan */}
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-green-500/5 to-transparent opacity-20 h-2 w-full animate-scan" />
@@ -312,7 +312,7 @@ export default function App() {
                 {renderContent(slides[currentSlide])}
 
                 {/* Footer */}
-                <div className="mt-6 pt-4 border-t border-green-500/30 flex justify-between items-center text-sm md:text-base uppercase tracking-widest text-green-500">
+                <div className="mt-2 pt-2 border-t border-green-500/30 flex justify-between items-center text-sm md:text-base uppercase tracking-widest text-green-500">
                     <span className="flex items-center gap-2">
                         <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                         {slides[currentSlide].footer}
