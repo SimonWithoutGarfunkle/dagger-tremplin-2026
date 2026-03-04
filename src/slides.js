@@ -35,6 +35,7 @@ const slides = [
         content: [
             "Mars 2022",
             "Outil CICD Open Source",
+            "Remplace un YAML static et linéaire par un orchestrateur intelligent",
             "**Dagger** est à ta pipeline, ce que **Docker** est à ton app !",
             "Coïncidence ? ..."
         ],
@@ -141,10 +142,9 @@ const slides = [
         subtitle: "Les superpouvoirs de notre écosystème",
         icon: <Cpu className="w-12 h-12 text-green-500" />,
         content: [
-            "**Typage fort** : chaque objet Dagger est typé, fini les surprises à l'exécution",
-            "**Erreurs à la compilation** : l'IDE vous prévient avant même de lancer",
-            "**Autocompletion** : explorez l'API Dagger comme n'importe quelle lib Java",
-            "Tous les avantages de votre environnement de développement habituel"
+            "**Typage fort**, **Erreurs à la compilation**, **Autocompletion**",
+            "Tous les avantages de votre environnement de développement habituel",
+            "Aucun lien avec le langage de votre projet"
         ],
         footer: "Vos pipelines, comme des apps Java."
     },
@@ -278,20 +278,19 @@ const slides = [
             {
                 label: "✅ Ce qui m'a convaincu",
                 items: [
-                    "Fin du Push & Pray, enfin !",
-                    "Le typage Java réduit les bugs de pipeline",
-                    "Vision produit solide, équipe core très active"
+                    "Vraie pipeline en Java",
+                    "Cache automatique"
                 ]
             },
             {
                 label: "⚠️ Points d'attention",
                 items: [
-                    "Trouver de la doc Java demande du creusage",
-                    "V0 encore jeune — prévoir du budget pour les mises à jour"
+                    "Maturité : breaking changes et manque de ressources",
+                    "Mes TI tournent pas sur MacOS"
                 ]
             }
         ],
-        verdict: "Oui — à adopter dès maintenant, les yeux ouverts sur la version.",
+        verdict: "A adopter : lisible, pas tant d'effort que ca - Si vous avez déja dit 'ca passe en local mais pas sur la pipeline' go !",
         footer: "Verdict de Simon."
     },
 
