@@ -51,7 +51,6 @@ const slides = [
         icon: <Box className="w-12 h-12 text-green-500" />,
         content: [
             "**Solomon Hykes** : co-fondateur de Docker",
-            "Même philosophie : **isolation + portabilité**",
             "Pas une coïncidence — c'est une vision"
         ],
         image: "/solomon hykes.jpg",
@@ -69,7 +68,7 @@ const slides = [
         content: [
             "**CI en local** : fini la divergence entre le poste de dev et le serveur — la même pipeline partout",
             "**Faible couplage** : la plateforme CI (GitHub, GitLab…) devient un simple déclencheur, pas un fournisseur propriétaire",
-            "**Du code, pas du YAML** : des pipelines maintenables et versionnées comme du vrai code"
+            "**Du code, pas du YAML** : des pipelines maintenables comme du vrai code"
         ],
         footer: "Il existe une sortie de la Matrice YAML."
     },
@@ -112,10 +111,8 @@ const slides = [
         subtitle: "BuildKit — le moteur sous le capot",
         icon: <Cpu className="w-12 h-12 text-green-500" />,
         content: [
-            "**Transforme des définitions en artefacts** : images, binaires, fichiers…",
-            "**LLB** : format de graphe intermédiaire décrivant les opérations sur les systèmes de fichiers",
-            "**Parallélisme natif** : BuildKit analyse le graphe et parallélise ce qu'il peut",
-            "**Cache par hash** : chaque nœud a une empreinte — si rien n'a changé, le résultat est réutilisé"
+            "**Transforme des définitions de build en artefacts** : images, binaires, fichiers…",
+            "**LLB** : format de graphe intermédiaire décrivant les opérations sur les systèmes de fichiers"
         ],
         footer: "BuildKit : la même technologie que derrière Docker."
     },
@@ -235,8 +232,7 @@ const slides = [
             "**V1 pas encore sortie** : stable mais des breaking changes entre versions (renommages d'API)",
             "**LLMs à cadrer** : Claude mélange les versions — efficace quand on le recadre sur les docs",
             "**Peu de ressources Java** : la communauté est surtout sur Go, les exemples Java sont rares",
-            "**Relativement récent** : peu de retours d'expérience en production à grande échelle",
-            "**Business model non définitif** : actuellement gratuit, mais ça peut changer — le même fondateur l'a déjà fait"
+            "**Relativement récent** : peu de retours d'expérience en production à grande échelle"
         ],
         footer: "Adopter en connaissance de cause."
     },
@@ -263,7 +259,7 @@ const slides = [
                 ]
             }
         ],
-        verdict: "A adopter : lisible, pas tant d'effort que ca - Si vous avez déja dit 'ca passe en local mais pas sur la pipeline' go !",
+        verdict: "",
         footer: "Verdict de Maxime."
     },
 
