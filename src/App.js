@@ -119,6 +119,7 @@ const renderContent = (slide) => {
                         src={slide.image}
                         alt={slide.imageCaption || ''}
                         className="max-h-[420px] max-w-full object-contain rounded border-2 border-green-500/50 shadow-[0_0_30px_rgba(34,197,94,0.4)]"
+                        style={slide.imageWhiteBg ? { backgroundColor: 'white', padding: '12px' } : undefined}
                     />
                     {slide.imageCaption && (
                         <p className="text-center text-green-400 text-sm mt-3 tracking-wider italic">{slide.imageCaption}</p>

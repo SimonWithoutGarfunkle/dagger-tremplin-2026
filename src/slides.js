@@ -36,7 +36,7 @@ const slides = [
             "Mars 2022",
             "Outil CICD Open Source",
             "Remplace un YAML static et linéaire par un orchestrateur intelligent",
-            "**Dagger** est à ta pipeline, ce que **Docker** est à ton app !",
+            "**Dagger** est à la pipeline, ce que **Docker** est à l'app !",
             "Coïncidence ? ..."
         ],
         footer: "Build once, run anywhere."
@@ -64,35 +64,78 @@ const slides = [
         id: 5,
         type: 'default',
         title: "Pourquoi Dagger ?",
-        subtitle: "Cinq problèmes, une réponse",
+        subtitle: "Trois problèmes, une réponse",
         icon: <Zap className="w-12 h-12 text-green-500" />,
         content: [
-            "**CI en local** : fini la divergence entre ton poste et le serveur — tu exécutes la même pipeline partout",
+            "**CI en local** : fini la divergence entre le poste de dev et le serveur — la même pipeline partout",
             "**Faible couplage** : la plateforme CI (GitHub, GitLab…) devient un simple déclencheur, pas un fournisseur propriétaire",
-            "**Du code, pas du YAML** : des pipelines maintenables, testables et versionnées comme du vrai code",
-            "**Containers partout** : chaque étape tourne dans un environnement isolé et identique — local ou CI"
+            "**Du code, pas du YAML** : des pipelines maintenables et versionnées comme du vrai code"
         ],
         footer: "Il existe une sortie de la Matrice YAML."
     },
 
-    // 6 — Comment ça marche ?
+    // 6 — Comment ça marche : SDK et CLI
     {
         id: 6,
         type: 'default',
         title: "Comment ?",
-        subtitle: "Les rouages sous le capot",
+        subtitle: "Les SDK et la CLI",
         icon: <Cpu className="w-12 h-12 text-green-500" />,
         content: [
-            "**Dagger Engine** : un daemon local (lui-même containerisé) qui orchestre et exécute les étapes",
-            "**Chaque étape = un container** : isolation garantie, comportement identique local ou CI",
-            "**Cache automatique** : si les inputs n'ont pas changé, l'étape est réutilisée — zéro travail inutile"
+            "**SDK disponibles** : Go, Python, TypeScript, PHP, Java — la pipeline dans le langage de son choix",
+            "**Le SDK compile vers GraphQL** : le code devient des requêtes que le moteur comprend",
+            "**La CLI est le proxy** : elle reçoit les requêtes GraphQL et les transmet au Dagger Engine"
         ],
-        footer: "Docker comme runtime, ton langage comme syntaxe."
+        footer: "Le langage de son choix, le moteur Dagger."
     },
 
-    // 7 — Pourquoi Accenture ?
+    // 7 — Comment ça marche : Le DAG
     {
         id: 7,
+        type: 'default',
+        title: "Comment ?",
+        subtitle: "Le DAG — Directed Acyclic Graph",
+        icon: <Cpu className="w-12 h-12 text-green-500" />,
+        content: [
+            "**Graphe de dépendances** : Dagger analyse le code et construit automatiquement le graphe",
+            "**Parallélisme automatique** : deux nœuds sans liaison entre eux s'exécutent en parallèle",
+            "**Cache intelligent** : un nœud inchangé n'est pas ré-exécuté — zéro travail inutile"
+        ],
+        footer: "Plus de séquençage manuel — le graphe s'en charge."
+    },
+
+    // 8 — Comment ça marche : BuildKit
+    {
+        id: 8,
+        type: 'default',
+        title: "Comment ?",
+        subtitle: "BuildKit — le moteur sous le capot",
+        icon: <Cpu className="w-12 h-12 text-green-500" />,
+        content: [
+            "**Transforme des définitions en artefacts** : images, binaires, fichiers…",
+            "**LLB** : format de graphe intermédiaire décrivant les opérations sur les systèmes de fichiers",
+            "**Parallélisme natif** : BuildKit analyse le graphe et parallélise ce qu'il peut",
+            "**Cache par hash** : chaque nœud a une empreinte — si rien n'a changé, le résultat est réutilisé"
+        ],
+        footer: "BuildKit : la même technologie que derrière Docker."
+    },
+
+    // 9 — BuildKit DAG image
+    {
+        id: 9,
+        type: 'fullimage',
+        title: "Comment ?",
+        subtitle: "Le graphe BuildKit en action",
+        icon: <Cpu className="w-12 h-12 text-green-500" />,
+        image: "/buildkit-dag.svg",
+        imageWhiteBg: true,
+        imageCaption: "Graphe LLB généré pour BuildKit — parallélisme et cache au niveau des nœuds",
+        footer: "Chaque nœud = une opération cachable et parallélisable."
+    },
+
+    // 10 — Pourquoi Accenture ?
+    {
+        id: 10,
         type: 'default',
         title: "Pourquoi chez Accenture ?",
         subtitle: "Un contexte qui pousse à innover",
@@ -106,9 +149,9 @@ const slides = [
         footer: "Le bon outil, au bon moment."
     },
 
-    // 8 — ATR waiting
+    // 11 — ATR waiting
     {
-        id: 8,
+        id: 11,
         type: 'fullimage',
         title: "Le contexte",
         subtitle: "La réalité du terrain",
@@ -118,25 +161,21 @@ const slides = [
         footer: "2h de file d'attente pour une correction d'une ligne."
     },
 
-    // 9 — Niveau 1 : CLI
+    // 12 — Niveau 1 : CLI
     {
-        id: 9,
-        type: 'default',
+        id: 12,
+        type: 'fullimage',
         title: "Niveau 1 : CLI",
         subtitle: "Zéro friction pour commencer",
         icon: <Terminal className="w-12 h-12 text-green-500" />,
-        content: [
-            "**dagger call** : appeler une fonction de pipeline directement depuis le terminal",
-            "**Sans configuration** : utilisable immédiatement sur n'importe quel projet",
-            "**Feedback local** : tester et débugger sans attendre un runner distant",
-            "**Compatible tous CI** : un seul entrypoint pour GitHub Actions, GitLab, Jenkins..."
-        ],
+        image: "/screenshots/cli command.png",
+        imageCaption: "dagger call — lancer une fonction de pipeline depuis le terminal",
         footer: "Votre terminal est votre nouveau CI runner."
     },
 
-    // 10 — Niveau 2 : SDK Java
+    // 13 — Niveau 2 : SDK Java
     {
-        id: 10,
+        id: 13,
         type: 'default',
         title: "Niveau 2 : SDK Java",
         subtitle: "Les superpouvoirs de notre écosystème",
@@ -149,9 +188,9 @@ const slides = [
         footer: "Vos pipelines, comme des apps Java."
     },
 
-    // 11 — Unit tests Java
+    // 14 — Unit tests Java
     {
-        id: 11,
+        id: 14,
         type: 'fullimage',
         title: "En pratique",
         subtitle: "Tests unitaires de pipeline",
@@ -161,9 +200,9 @@ const slides = [
         footer: "Des pipelines testables comme du vrai code."
     },
 
-    // 12 — Run Java
+    // 15 — Run Java
     {
-        id: 12,
+        id: 15,
         type: 'fullimage',
         title: "En pratique",
         subtitle: "Exécution locale",
@@ -173,45 +212,9 @@ const slides = [
         footer: "Local, rapide, reproductible."
     },
 
-    // 13 — Mise en oeuvre : Avant
+    // 16 — Pas mal non ?
     {
-        id: 13,
-        type: 'default',
-        title: "Mise en oeuvre",
-        subtitle: "Avant Dagger — l'ancien monde",
-        icon: <Box className="w-12 h-12 text-green-500" />,
-        content: [
-            "**Scripts shell** : 400 lignes de bash non testables, non typées",
-            "**YAML dupliqué** : un fichier par environnement, une incohérence par semaine",
-            "**Debug** : git push → 20 min d'attente → lire les logs → recommencer",
-            "**Onboarding** : 2 jours pour qu'un nouveau dev lance sa première pipeline"
-        ],
-        footer: "L'ancien monde."
-    },
-
-    // 14 — Avant / Après (tableau)
-    {
-        id: 14,
-        type: 'table',
-        title: "Avant / Après",
-        subtitle: "Ce que Dagger change concrètement",
-        icon: <Zap className="w-12 h-12 text-green-500" />,
-        tableData: {
-            headers: ["Critère", "Avant Dagger", "Avec Dagger"],
-            rows: [
-                ["Lancement local",  "❌ Impossible",              "✅ dagger call en 30s"],
-                ["Debug pipeline",   "⏳ 2h de file runner",       "✅ Immédiat en local"],
-                ["Réutilisation",    "📋 Copy-paste YAML",         "✅ Fonctions typées & testables"],
-                ["Onboarding",       "📅 ~2 jours",                "✅ ~2 heures"],
-                ["Maintenance",      "⚠️ Fragile & implicite",     "✅ Compilé & versionné"],
-            ]
-        },
-        footer: "Les chiffres parlent d'eux-mêmes."
-    },
-
-    // 15 — Pas mal non ?
-    {
-        id: 15,
+        id: 16,
         type: 'fullimage',
         title: "Pas mal non ?",
         subtitle: "C'est presque français",
@@ -221,9 +224,9 @@ const slides = [
         footer: "... non. Pas celui-là."
     },
 
-    // 16 — Limites
+    // 17 — Limites
     {
-        id: 16,
+        id: 17,
         type: 'default',
         title: "Les Limites",
         subtitle: "Ce qu'il faut savoir avant de se lancer",
@@ -238,9 +241,9 @@ const slides = [
         footer: "Adopter en connaissance de cause."
     },
 
-    // 17 — Avis de Maxime
+    // 18 — Avis de Maxime
     {
-        id: 17,
+        id: 18,
         type: 'opinion',
         title: "Avis de Maxime",
         subtitle: "Promesse tenue ?",
@@ -249,27 +252,24 @@ const slides = [
             {
                 label: "✅ Ce qui m'a convaincu",
                 items: [
-                    "Le run local est un vrai game changer",
-                    "Le SDK Java rend les pipelines maintenables",
-                    "L'intégration dans la stack existante s'est bien passée"
+                    "Plus de YAML",
+                    "Cache automatique"
                 ]
             },
             {
                 label: "⚠️ Points d'attention",
                 items: [
-                    "Mise à jour = risque de casse sur les APIs",
-                    "SDK Java moins documenté que Go",
-                    "Courbe d'apprentissage au démarrage"
+                    "Lisibilité sur la Pipeline"
                 ]
             }
         ],
-        verdict: "Promesse tenue — à condition de figer sa version et de bien documenter.",
+        verdict: "A adopter : lisible, pas tant d'effort que ca - Si vous avez déja dit 'ca passe en local mais pas sur la pipeline' go !",
         footer: "Verdict de Maxime."
     },
 
-    // 18 — Avis de Simon
+    // 19 — Avis de Simon
     {
-        id: 18,
+        id: 19,
         type: 'opinion',
         title: "Avis de Simon",
         subtitle: "Promesse tenue ?",
@@ -294,9 +294,9 @@ const slides = [
         footer: "Verdict de Simon."
     },
 
-    // 19 — Pour aller + loin
+    // 20 — Pour aller + loin
     {
-        id: 19,
+        id: 20,
         type: 'default',
         title: "Pour aller + loin",
         subtitle: "Ressources & communauté",
@@ -309,9 +309,9 @@ const slides = [
         footer: "La Matrice n'a plus de secrets pour vous."
     },
 
-    // 20 — Questions
+    // 21 — Questions
     {
-        id: 20,
+        id: 21,
         type: 'question',
         title: "Des questions ?",
         subtitle: "Dagger · Java SDK · CI/CD Local",
